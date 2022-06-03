@@ -1,4 +1,9 @@
 <div class="table-responsive">
+  {% if is_print is None %}
+  <a href="{% url 'financeiro:imprimirlancamentos' %}" target="_blank" class="btn btn-success" style="display: inline-block;float:right; margin-bottom: 5px;">
+    <span class="material-icons">print</span>
+  </a>
+  {% endif %}
   <table id="lista-database" class="table table-bordered table-striped lista-table">
     <thead>
       <tr>
@@ -10,13 +15,13 @@
         <th>Status</th>
         <th>Cliente/Fornecedor</th>
         <th>Valor líquido</th>
-        <th>Remover</th>
+        {% if is_print is None %}<th>Remover</th>{% endif %}
       </tr>
     </thead>
 
     <tbody>
      {% if all_lancamentos %}
-     {% for lancamento in all_lancamentos %}
+     {% for lancamento in all_lancamentos|dictsort:"id" %}
      <tr class="clickable-row" data-href="{{lancamento.get_edit_url}}">
       <td>{{lancamento.id}}</td>
       <td>{{lancamento.descricao}}</td>
@@ -26,10 +31,12 @@
       <td>{% if lancamento.status %}{{lancamento.get_status_display}}{% endif %}</td>
       <td>{% if lancamento.cliente %}{{lancamento.cliente}}{% elif lancamento.fornecedor %}{{lancamento.fornecedor}}{% endif %}</td>
       <td>{{lancamento.format_valor_liquido}}</td>
-      <td class="lista-remove">
-        <input type="checkbox" name="{{lancamento.id}}" id="remover-lancamento-{{lancamento.id}}"/>
-        <label class="remove-entry-label" for="remover-lancamento-{{lancamento.id}}"></label>
-      </td>
+      {% if is_print is None %}
+        <td class="lista-remove">
+          <input type="checkbox" name="{{lancamento.id}}" id="remover-lancamento-{{lancamento.id}}"/>
+          <label class="remove-entry-label" for="remover-lancamento-{{lancamento.id}}"></label>
+        </td>
+      {% endif %}
     </tr>
     {% endfor %}
     {%else%}

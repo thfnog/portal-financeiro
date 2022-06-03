@@ -16,6 +16,8 @@ from djangosige.apps.estoque.models import SaidaEstoque, ItensMovimento, Produto
 from itertools import chain
 from datetime import datetime
 
+from djangosige.apps.base.utils import render_to_pdf
+
 
 class MovimentoCaixaMixin(object):
 
@@ -431,6 +433,14 @@ class LancamentoListView(LancamentoListBaseView):
                     instance.delete()
         return redirect(self.success_url)
 
+class ImprimirLancamentos():
+
+    def render_to_pdf(self):        
+        context = {}
+        context['all_lancamentos'] = LancamentoListView.get_queryset(self)
+        context['is_print'] = True
+        pdf = render_to_pdf('financeiro/lancamento/todos_lancamentos_list_table.html', context)
+        return pdf
 
 class ContaPagarListView(LancamentoListBaseView):
     template_name = 'financeiro/lancamento/lancamento_list.html'

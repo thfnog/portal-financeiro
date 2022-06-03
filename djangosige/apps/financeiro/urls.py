@@ -12,6 +12,9 @@ urlpatterns = [
     # Lista todos lancamentos
     url(r'lancamentos/$', views.LancamentoListView.as_view(),
         name='listalancamentoview'),
+    # Imprimir lancamentos
+    url(r'imprimirlancamentos/$', views.ImprimirLancamentos.render_to_pdf,
+        name='imprimirlancamentos'),
 
     # Contas a pagar
     # financeiro/contapagar/adicionar/
